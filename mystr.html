@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pejuang Gelar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <!-- Ikon Lucide -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Efek Konfeti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --accent: #facc15; 
+            --primary: #4facfe;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #0f172a;
+            color: white;
+            overflow: hidden; 
+        }
+        .bg-mesh {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: 
+                radial-gradient(circle at 0% 0%, rgba(79, 172, 254, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(250, 204, 21, 0.1) 0%, transparent 50%);
+            z-index: -1;
+        }
+        .glass {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .glass:hover {
+            border-color: var(--accent);
+            transform: translateY(-5px) scale(1.01);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            cursor: pointer;
+        }
+        .page-content {
+            display: none;
+            animation: fadeIn 0.5s ease forwards;
+            height: calc(100vh - 160px);
+            overflow-y: auto;
+            padding-bottom: 100px;
+        }
+        .page-content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .nav-link.active {
+            color: var(--accent);
+            border-bottom: 2px solid var(--accent);
+        }
+        /* Custom Scrollbar */
+        .page-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        .page-content::-webkit-scrollbar-thumb {
+            background: rgba(250, 204, 21, 0.2);
+            border-radius: 10px;
+        }
+        .glow-text {
+            text-shadow: 0 0 15px rgba(250, 204, 21, 0.3);
+        }
+        .image-container {
+            position: relative;
+            max-width: 450px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        .image-container img {
+            border-radius: 2rem;
+            box-shadow: 0 0 30px rgba(250, 204, 21, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Modal Styles */
+        #ta-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        #ta-modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <div class="bg-mesh"></div>
+    
+    <!-- Navigasi Utama -->
+    <nav class="fixed top-0 w-full z-50 p-6 flex justify-between items-center backdrop-blur-md border-b border-white/5">
+        <div class="flex items-center gap-2">
+            <i data-lucide="graduation-cap" class="text-yellow-400"></i>
+            <span class="font-bold tracking-tighter text-xl italic text-yellow-400 uppercase">PEJUANG GELAR.</span>
+        </div>
+        <div class="hidden md:flex gap-8 text-sm opacity-70">
+            <button onclick="showPage('home')" class="nav-link active px-2 py-1 transition-all" id="nav-home">Beranda</button>
+            <button onclick="showPage('skuad')" class="nav-link px-2 py-1 transition-all" id="nav-skuad">Squad</button>
+            <button onclick="showPage('quotes')" class="nav-link px-2 py-1 transition-all" id="nav-quotes">Semangat</button>
+        </div>
+        <div class="w-10 h-10"></div> 
+    </nav>
+
+    <!-- Konten Utama -->
+    <main class="pt-32 px-6 max-w-5xl mx-auto h-screen">
+        
+        <!-- Laman 1: Beranda -->
+        <section id="page-home" class="page-content active text-center">
+            <div class="mt-4 flex flex-col items-center">
+                <div class="inline-block px-4 py-1 rounded-full border border-yellow-400/30 bg-yellow-400/10 text-yellow-400 text-xs font-bold mb-6 tracking-widest uppercase">
+                    Penelitian &bull; Inovasi &bull; Dedikasi
+                </div>
+                
+                <div class="image-container mb-8 transition-transform hover:scale-105 duration-500">
+                    <img src="https://assets.kompasiana.com/items/album/2022/10/07/221004120028-nobel-physics-split-exlarge-169-633fee49a51c6f0371683962.jpg?t=o&v=740&x=416" 
+                         alt="[Gambar Ilustrasi Penelitian Fisika]" 
+                         class="w-full h-auto">
+                </div>
+
+                <h1 class="text-4xl md:text-6xl font-extrabold mb-6 tracking-tighter leading-tight glow-text uppercase italic text-shadow-none">
+                    Eksperimen <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500 text-shadow-none">Masa Depan.</span>
+                </h1>
+
+                <div class="max-w-2xl">
+                    <p class="text-xl text-slate-300 leading-relaxed font-light italic mb-6">
+                        "Layaknya sebuah partikel dalam medan kuantum, setiap langkahmu memiliki potensi tak terbatas untuk mengubah realitas melalui ilmu pengetahuan."
+                    </p>
+                    <div class="w-20 h-1 bg-yellow-400/40 mx-auto mb-6 rounded-full"></div>
+                    <p class="text-slate-400 text-sm leading-relaxed max-w-lg mx-auto">
+                        Jangan biarkan variabel ketidakpastian menghentikan penelitianmu. Teruslah bereksperimen dengan waktu, berkolaborasi dengan kegigihan, dan temukan jawaban atas impian yang sedang kau susun.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Laman 2: Skuad Teman -->
+        <section id="page-skuad" class="page-content">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold italic tracking-tight uppercase text-yellow-400">Skuad Pejuang Gelar</h2>
+                <p class="text-slate-400 mt-4">Ketuk profil untuk melihat tajuk Tugas Akhir.</p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pb-10 px-2">
+                <!-- Teman 1 -->
+                <div onclick="openModal('Putra Ikhsan Pratama', 'Analisis Struktur Kristal Material Superkonduktor Berbasis Cuprate')" class="glass p-6 rounded-2xl flex flex-col items-center text-center group transition-all hover:border-yellow-400">
+                    <div class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-yellow-400/20">
+                        <i data-lucide="user" class="text-yellow-400 w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-bold text-lg">Putra Ikhsan Pratama</h3>
+                    <p class="text-[10px] text-yellow-400/70 tracking-widest mt-1 uppercase font-bold">NIM: H021221054</p>
+                </div>
+                <!-- Teman 2 -->
+                <div onclick="openModal('Abdul Qadir Jailani', 'Simulasi Pergerakan Fluida dalam Pipa Magnetik untuk Aplikasi Industri')" class="glass p-6 rounded-2xl flex flex-col items-center text-center group transition-all hover:border-yellow-400">
+                    <div class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-yellow-400/20">
+                        <i data-lucide="user" class="text-yellow-400 w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-bold text-lg">Abdul Qadir Jailani</h3>
+                    <p class="text-[10px] text-yellow-400/70 tracking-widest mt-1 uppercase font-bold">NIM: H021221015</p>
+                </div>
+                <!-- Teman 3 -->
+                <div onclick="openModal('Fikry Lukman', 'Studi Teoretis Interaksi Neutrino pada Reaktor Nuklir Generasi Terbaru')" class="glass p-6 rounded-2xl flex flex-col items-center text-center group transition-all hover:border-yellow-400">
+                    <div class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-yellow-400/20">
+                        <i data-lucide="user" class="text-yellow-400 w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-bold text-lg">Fikry Lukman</h3>
+                    <p class="text-[10px] text-yellow-400/70 tracking-widest mt-1 uppercase font-bold">NIM: H021221043</p>
+                </div>
+                <!-- Teman 4 -->
+                <div onclick="openModal('Husnul Fatimah', 'Pengukuran Radiasi Latar Belakang di Area Laboratorium Fisika Nuklir')" class="glass p-6 rounded-2xl flex flex-col items-center text-center group transition-all hover:border-yellow-400">
+                    <div class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-yellow-400/20">
+                        <i data-lucide="user" class="text-yellow-400 w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-bold text-lg">Husnul Fatimah</h3>
+                    <p class="text-[10px] text-yellow-400/70 tracking-widest mt-1 uppercase font-bold">NIM: H021221017</p>
+                </div>
+                <!-- Teman 5 -->
+                <div onclick="openModal('St. Nur Adnen A', 'Karakterisasi Nanopartikel Emas Menggunakan Metode Optik SERS')" class="glass p-6 rounded-2xl flex flex-col items-center text-center group transition-all hover:border-yellow-400">
+                    <div class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-yellow-400/20">
+                        <i data-lucide="user" class="text-yellow-400 w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-nowrap">St. Nur Adnen A</h3>
+                    <p class="text-[10px] text-yellow-400/70 tracking-widest mt-1 uppercase font-bold">NIM: H021221035</p>
+                </div>
+                <!-- Teman 6 -->
+                <div onclick="openModal('Nadya Fitrah', 'Analisis Data Spektral Coherent Elastic Neutrino Scattering (CEvNS)')" class="glass p-6 rounded-2xl flex flex-col items-center text-center group transition-all hover:border-yellow-400">
+                    <div class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-yellow-400/20">
+                        <i data-lucide="user" class="text-yellow-400 w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-bold text-lg">Nadya Fitrah</h3>
+                    <p class="text-[10px] text-yellow-400/70 tracking-widest mt-1 uppercase font-bold">NIM: H021221018</p>
+                </div>
+                <!-- Teman 7 -->
+                <div onclick="openModal('Algun Zainal Chipada', 'Pemodelan Medan Magnet pada Bintang Neutron Menggunakan Relativitas Umum')" class="glass p-6 rounded-2xl flex flex-col items-center text-center group transition-all hover:border-yellow-400">
+                    <div class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-yellow-400/20">
+                        <i data-lucide="user" class="text-yellow-400 w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-nowrap">Setelah Zainal Chipada</h3>
+                    <p class="text-[10px] text-yellow-400/70 tracking-widest mt-1 uppercase font-bold">NIM: H021221035</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Laman 3: Semangat (With Gemini Integration) -->
+        <section id="page-quotes" class="page-content">
+            <div class="glass rounded-[2rem] p-12 text-center mx-2 relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-4 opacity-20">
+                    <i data-lucide="cpu" class="w-20 h-20"></i>
+                </div>
+
+                <h3 class="text-sm uppercase tracking-[0.3em] text-yellow-400 font-bold mb-8">Dosis Semangat</h3>
+                
+                <div class="min-h-[160px] flex flex-col items-center justify-center">
+                    <div id="quote-loader" class="hidden mb-4">
+                        <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-yellow-400"></div>
+                    </div>
+                    <i id="quote-icon" data-lucide="sparkles" class="opacity-20 mb-4 h-12 w-12 text-yellow-400"></i>
+                    <p id="quote-text" class="text-2xl md:text-3xl font-medium leading-relaxed italic mb-8 px-4 glow-text text-shadow-none">
+                        "Pilih cara Anda mendapatkan inspirasi hari ini."
+                    </p>
+                </div>
+
+                <div class="flex flex-col md:flex-row justify-center gap-4">
+                    <button onclick="handleQuoteClick()" class="bg-white/10 hover:bg-white/20 border border-white/10 px-8 py-4 rounded-full font-bold text-white transition-all transform active:scale-95 flex items-center justify-center gap-3 shadow-lg">
+                        <span>Acak Kata</span>
+                        <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                    </button>
+                    
+                    <button onclick="askGemini()" class="bg-gradient-to-r from-blue-600 to-purple-600 px-10 py-4 rounded-full font-bold text-white transition-all transform active:scale-95 flex items-center justify-center gap-3 shadow-xl shadow-blue-500/20">
+                        <i data-lucide="bot" class="w-5 h-5"></i>
+                        <span>Motivasi Gemini AI</span>
+                    </button>
+                </div>
+
+                <div class="mt-12 opacity-50 text-xs">
+                    Butuh bantuan lebih mendalam? Kunjungi <a href="https://gemini.google.com/" target="_blank" class="text-blue-400 hover:underline">Gemini Google</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal for Tugas Akhir -->
+    <div id="ta-modal" onclick="closeModal()">
+        <div class="glass p-8 rounded-[2.5rem] max-w-lg w-full text-center relative" onclick="event.stopPropagation()">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors">
+                <i data-lucide="x"></i>
+            </button>
+            <i data-lucide="book-marked" class="w-12 h-12 text-yellow-400 mx-auto mb-4"></i>
+            <h4 id="modal-name" class="text-2xl font-bold mb-2">Nama Pejuang</h4>
+            <div class="w-12 h-0.5 bg-yellow-400/40 mx-auto mb-6"></div>
+            <p class="text-[10px] uppercase tracking-widest text-yellow-400 mb-2 font-bold">Tajuk Tugas Akhir</p>
+            <p id="modal-judul" class="text-lg italic leading-relaxed text-slate-200">Judul penelitian akan muncul di sini.</p>
+            <button onclick="closeModal()" class="mt-8 bg-yellow-400 text-slate-900 px-6 py-2 rounded-full font-bold text-sm active:scale-95 transition-all">Tutup</button>
+        </div>
+    </div>
+
+    <!-- Navigation Footer Mobile -->
+    <div class="fixed bottom-0 w-full md:hidden bg-slate-900/80 backdrop-blur-lg border-t border-white/5 flex justify-around p-4 z-50">
+        <button onclick="showPage('home')" class="flex flex-col items-center gap-1 opacity-60 nav-link-mobile" id="m-nav-home">
+            <i data-lucide="home" class="w-5 h-5"></i>
+            <span class="text-[10px]">Beranda</span>
+        </button>
+        <button onclick="showPage('skuad')" class="flex flex-col items-center gap-1 opacity-60 nav-link-mobile" id="m-nav-skuad">
+            <i data-lucide="users" class="w-5 h-5"></i>
+            <span class="text-[10px]">Teman</span>
+        </button>
+        <button onclick="showPage('quotes')" class="flex flex-col items-center gap-1 opacity-60 nav-link-mobile" id="m-nav-quotes">
+            <i data-lucide="zap" class="w-5 h-5"></i>
+            <span class="text-[10px]">Mood</span>
+        </button>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        const apiKey = ""; 
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-' + pageId).classList.add('active');
+
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            if (document.getElementById('nav-' + pageId)) {
+                document.getElementById('nav-' + pageId).classList.add('active');
+            }
+
+            document.querySelectorAll('.nav-link-mobile').forEach(l => {
+                l.style.opacity = '0.5';
+                l.style.color = 'white';
+            });
+            const mNav = document.getElementById('m-nav-' + pageId);
+            if (mNav) {
+                mNav.style.opacity = '1';
+                mNav.style.color = '#facc15';
+            }
+
+            document.getElementById('page-' + pageId).scrollTop = 0;
+        }
+
+        // Modal Logic
+        function openModal(name, judul) {
+            document.getElementById('modal-name').innerText = name;
+            document.getElementById('modal-judul').innerText = `"${judul}"`;
+            document.getElementById('ta-modal').classList.add('active');
+            
+            confetti({
+                particleCount: 40,
+                spread: 50,
+                origin: { y: 0.7 },
+                colors: ['#facc15', '#ffffff']
+            });
+        }
+
+        function closeModal() {
+            document.getElementById('ta-modal').classList.remove('active');
+        }
+
+        const quotes = [
+            "Lulus tepat waktu adalah janji, tapi lulus di waktu yang tepat adalah takdir. Teruslah berjuang!",
+            "Revisi dosen adalah cara semesta membentukmu menjadi pribadi yang lebih sabar dan teliti.",
+            "Ingat wajah orang tuamu saat kamu merasa ingin menyerah di tengah tumpukan tugas.",
+            "Satu langkah lagi menuju toga, jangan biarkan rasa malas mencuri mimpimu.",
+            "Pendidikan memang pahit akarnya, tapi buahnya sangatlah manis.",
+            "Gelar Sarjana itu berat, tapi masa depan tanpa ilmu jauh lebih berat.",
+            "Sahabat terbaik adalah mereka yang berjuang bersama dari semester satu sampai wisuda."
+        ];
+
+        function handleQuoteClick() {
+            confetti({
+                particleCount: 80,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#facc15', '#ffffff']
+            });
+
+            const textElement = document.getElementById('quote-text');
+            const randomIndex = Math.floor(Math.random() * quotes.length);
+            
+            textElement.style.opacity = '0';
+            setTimeout(() => {
+                textElement.innerText = `"${quotes[randomIndex]}"`;
+                textElement.style.opacity = '1';
+            }, 200);
+        }
+
+        async function askGemini() {
+            const textElement = document.getElementById('quote-text');
+            const loader = document.getElementById('quote-loader');
+            const icon = document.getElementById('quote-icon');
+
+            textElement.style.opacity = '0.5';
+            loader.classList.remove('hidden');
+            icon.classList.add('hidden');
+            textElement.innerText = "Gemini sedang merangkai kata motivasi untukmu...";
+
+            const systemPrompt = "Berikan satu kalimat motivasi pendek, puitis, dan kreatif untuk mahasiswa pejuang gelar yang sedang lelah. Gunakan Bahasa Indonesia yang sangat menginspirasi. Jangan gunakan kutipan terkenal, buatlah yang baru.";
+            const userQuery = "Berikan satu kalimat motivasi.";
+
+            try {
+                const response = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: userQuery }] }],
+                        systemInstruction: { parts: [{ text: systemPrompt }] }
+                    })
+                });
+
+                const result = await response.json();
+                const text = result.candidates?.[0]?.content?.parts?.[0]?.text || "Gagal mendapatkan motivasi. Cobalah lagi nanti.";
+                
+                loader.classList.add('hidden');
+                icon.classList.remove('hidden');
+                textElement.innerText = `"${text.trim()}"`;
+                textElement.style.opacity = '1';
+
+                confetti({
+                    particleCount: 150,
+                    spread: 100,
+                    origin: { y: 0.6 },
+                    colors: ['#4285f4', '#9b72cb', '#d96570']
+                });
+
+            } catch (error) {
+                loader.classList.add('hidden');
+                icon.classList.remove('hidden');
+                textElement.innerText = "Maaf, koneksi ke Gemini terputus. Silakan coba lagi.";
+                textElement.style.opacity = '1';
+            }
+        }
+
+        async function fetchWithRetry(url, options, retries = 5, backoff = 1000) {
+            try {
+                const res = await fetch(url, options);
+                if (!res.ok) throw new Error();
+                return res;
+            } catch (err) {
+                if (retries > 0) {
+                    await new Promise(r => setTimeout(r, backoff));
+                    return fetchWithRetry(url, options, retries - 1, backoff * 2);
+                }
+                throw err;
+            }
+        }
+
+        showPage('home');
+    </script>
+</body>
+</html>
